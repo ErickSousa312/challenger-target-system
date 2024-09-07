@@ -13,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import spring.constants.ApplicationConstants;
+import spring.domain.entities.user.model.Authority;
 import spring.domain.entities.user.model.Customer;
 import spring.domain.entities.user.dto.LoginRequestDTO;
 import spring.domain.entities.user.dto.LoginResponseDTO;
@@ -37,6 +38,10 @@ public class UserController {
     ResponseEntity<String> RegisterUser(@RequestBody Customer customer) {
         try {
             String encodedPassword = passwordEncoder.encode(customer.getPws());
+
+            for (Authority authority : customer.getAuthority()) {
+                authority.setCustomer(customer);
+            }
             customer.setPws(encodedPassword);
             Customer newUser = customerRepository.save(customer);
             if (newUser.getId() > 0) {

@@ -30,16 +30,21 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfigFilter {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http,JWTTokenGeneratorFilter jwtTokenGeneratorFilter, JWTValidatorFilter jwtValidatorFilter) throws Exception {
-        http.sessionManagement((smc-> smc.sessionCreationPolicy(SessionCreationPolicy.STATELESS)))
-                .csrf(AbstractHttpConfigurer::disable);
+        http              .csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/user/apiLogin").permitAll()
                 .requestMatchers("/wellcome").permitAll()
+                .requestMatchers("/Question1/**").permitAll()
+                .requestMatchers("/Question2/**").permitAll()
+                .requestMatchers("/Question3/**").permitAll()
+                .requestMatchers("/Question4/**").permitAll()
+                .requestMatchers("/Question5/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated());
         http.formLogin(withDefaults());
-//        http.httpBasic(hbs -> hbs.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
+        http.httpBasic(hbs -> hbs.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
         http.exceptionHandling(ehc-> ehc.accessDeniedHandler(new CustomHandlerAccessDeniedHandler()).authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));
-        http.anonymous(AbstractHttpConfigurer::disable);
+//        http.anonymous(AbstractHttpConfigurer::disable);
         http.addFilterAfter(jwtTokenGeneratorFilter, BasicAuthenticationFilter.class);
         http.addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class);
         return http.build();

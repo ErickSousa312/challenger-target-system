@@ -1,8 +1,6 @@
 spring:
   application:
     name: unit-test-spring
-  config:
-    import: application_prod.yml
   profiles:
     active: default
   jpa:
@@ -11,22 +9,17 @@ spring:
     open-in-view: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         format_sql: true
   datasource:
-    url: jdbc:postgresql://database:5432/db
-    username: admin
-    password: root
-    driver-class-name: org.postgresql.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
   security:
     user:
       name: admin
       password: admin
-    oauth2:
-      resourceserver:
-        jwt:
-          public-key-location: classpath:app.pub
-
 
 logging:
   pattern:
